@@ -3,42 +3,37 @@
 **Autor:** Yago Phellipe  
 **Curso:** Ciência da Computação  
 
-Este é um guia para compreendermos como acessar e treinar no ambiente do DeepRacer-for-Cloud o nosso carrinho no servidor Shrek2.
+Este guia explica como acessar e treinar o carrinho no ambiente do DeepRacer for Cloud, utilizando o servidor **Shrek2**.
 
 ---
 
 ## Acesso ao DeepRacer for Cloud
 
-Para acessar o DeepRacer for Cloud, siga os passos abaixo:
-
 1. **Baixe o MobaXterm:**
+   - Acesse o site oficial do MobaXterm e instale a ferramenta.
 
-   - Acesse o site oficial do MobaXterm e instale a ferramenta em sua máquina.
-
-2. **Abra o terminal e conecte-se ao servidor:**
-
-   - Execute o comando abaixo no terminal do MobaXterm para conectar-se ao servidor via SSH:
+2. **Conecte-se ao servidor:**
+   - Abra o MobaXterm e conecte-se ao servidor via SSH com o comando:
      ```bash
      ssh -L 8888:localhost:8888 deepracer@10.8.8.10
      ```
    - Insira a senha fornecida para o perfil `deepracer`.
 
-3. **Acesse o ambiente de treinamento:**
-
-   - Após conectar-se, verifique onde está o repositório do DeepRacer:
+3. **Acesse o repositório do DeepRacer:**
+   - Verifique o repositório com o comando:
      ```bash
      ls
      ```
-   - Entre no diretório do DeepRacer:
+   - Entre no diretório:
      ```bash
      cd deepracer-for-cloud
      ```
-   - Existe uma pasta customizada para cada grupo, em que podemos colocar e mudar as variáveis de ambiente do modo que queremos. Para isso, precisamos linkar as nossas variáveis de ambiente e os arquivos customizados:
+   - Configure os arquivos customizados para o seu grupo:
      ```bash
      ln -s custom_files4 custom_files
      ln -s system4.env system.env
      ```
-   - Agora, selecione a configuração do ambiente que será utilizada com o comando abaixo:
+   - Ative o ambiente de treinamento:
      ```bash
      source bin/activate.sh run4.env
      ```
@@ -47,7 +42,11 @@ Para acessar o DeepRacer for Cloud, siga os passos abaixo:
 
 ## Seleção de Pistas
 
-Existem dois arquivos principais para configurar o ambiente: o `run4.env` e o `system4.env`. Para alterar a pista, modifique a variável `WORLD_NAME` no arquivo `run4.env`. Após a alteração, salve o arquivo e execute novamente o comando:
+1. Abra o arquivo `run4.env` para editar a variável `DR_WORLD_NAME`:
+   ```bash
+   nano run4.env
+   ```
+2. Altere o valor para a pista desejada, salve e reative o ambiente:
    ```bash
    source bin/activate.sh run4.env
    ```
@@ -56,9 +55,7 @@ Existem dois arquivos principais para configurar o ambiente: o `run4.env` e o `s
 
 ## Seleção de Modelos de RL
 
-Para selecionar o modelo de RL utilizado no treinamento, siga os passos abaixo:
-
-1. Entre na pasta `custom_files4`:
+1. Acesse a pasta de arquivos customizados:
    ```bash
    cd custom_files4
    ```
@@ -66,8 +63,7 @@ Para selecionar o modelo de RL utilizado no treinamento, siga os passos abaixo:
    ```bash
    nano model_metadata.json
    ```
-3. Altere o valor da chave `training_algorithm` para o modelo desejado (PPO, DQN, SARSA, etc.).
-4. Salve o arquivo e atualize os arquivos customizados com o comando:
+3. Altere o valor da chave `training_algorithm` para o modelo desejado, salve e atualize os arquivos:
    ```bash
    dr-update && dr-update-env && dr-upload-custom-files
    ```
@@ -76,18 +72,11 @@ Para selecionar o modelo de RL utilizado no treinamento, siga os passos abaixo:
 
 ## Ajuste de Hiperparâmetros
 
-Para ajustar os hiperparâmetros utilizados no treinamento, siga os passos abaixo:
-
-1. Entre na pasta `custom_files4`:
-   ```bash
-   cd custom_files4
-   ```
-2. Edite o arquivo `hyperparameters.json`:
+1. Edite o arquivo `hyperparameters.json`:
    ```bash
    nano hyperparameters.json
    ```
-3. Altere os parâmetros desejados, como taxa de aprendizado, taxa de exploração, etc.
-4. Salve o arquivo e atualize os arquivos customizados com o comando:
+2. Modifique os hiperparâmetros desejados, salve e atualize os arquivos:
    ```bash
    dr-update && dr-update-env && dr-upload-custom-files
    ```
@@ -96,28 +85,24 @@ Para ajustar os hiperparâmetros utilizados no treinamento, siga os passos abaix
 
 ## Seleção de Caixas de Colisão
 
-Para adicionar caixas de colisão, edite o arquivo `run4.env`:
+1. Edite o arquivo `run4.env`:
    ```bash
    nano run4.env
    ```
-Altere o campo `DR_RACE_TYPE` para `OBJECT_AVOIDANCE` ou `HEAD_TO_BOT`. Salve o arquivo e reative o ambiente com:
-   ```bash
-   source bin/activate.sh run4.env
-   ```
+2. Modifique o campo `DR_RACE_TYPE` para `OBJECT_AVOIDANCE` ou `HEAD_TO_BOT`, conforme necessário, e salve o arquivo.
 
 ---
 
 ## Visualização de Variáveis de Ambiente
 
-Para visualizar as variáveis de ambiente, utilize o comando `nano` ou `cat`. Por exemplo:
-   ```bash
-   cat run4.env
-   ```
-Isso exibirá as variáveis diretamente no terminal. Para editar, use:
-   ```bash
-   nano run4.env
-   ```
-
+- Utilize o comando `cat` para visualizar diretamente o conteúdo do arquivo:
+  ```bash
+  cat run4.env
+  ```
+- Ou use o comando `nano` para abrir e editar o arquivo:
+  ```bash
+  nano run4.env
+  ```
 ---
 
 ## Início do Treinamento
@@ -128,7 +113,7 @@ Isso exibirá as variáveis diretamente no terminal. Para editar, use:
    ```
 2. Inicie o treinamento com o comando:
    ```bash
-   dr-train
+   dr-start-training -w
    ```
 3. Acompanhe o progresso do treinamento no terminal ou nos gráficos disponíveis no painel.
 
@@ -139,7 +124,7 @@ Isso exibirá as variáveis diretamente no terminal. Para editar, use:
 1. Para realizar uma avaliação, selecione o modelo treinado no painel do DeepRacer.
 2. Execute o comando para iniciar a avaliação:
    ```bash
-   dr-evaluate
+   dr-start-evaluate
    ```
 3. Escolha a pista desejada e acompanhe os resultados gerados.
 
@@ -147,11 +132,14 @@ Isso exibirá as variáveis diretamente no terminal. Para editar, use:
 
 ## Realização de Deploy
 
-1. Após treinar e avaliar o modelo, inicie o processo de deploy com o comando:
-   ```bash
-   dr-deploy
-   ```
-2. Certifique-se de que o modelo está configurado corretamente para o ambiente de produção.
+1. **Escolha o modelo treinado:**
+
+   - Para realizar o deploy do modelo treinado no carrinho, escolha  o modelo que foi gerado a partir do evaluate e baixe-o para o seu computador.
+   
+
+2. **Realize o deploy:**
+
+   - Após baixar o modelo, basta conectar o carrinho ao computador e realizar o upload do modelo para o carrinho. Com isso, o modelo estará pronto para ser utilizado no carrinho.
 
 ---
 
@@ -159,14 +147,14 @@ Isso exibirá as variáveis diretamente no terminal. Para editar, use:
 
 Para continuar o treinamento de uma pista A para uma pista B, siga os passos abaixo:
 
-1. Altere a variável `WORLD_NAME` no arquivo `run4.env` para a nova pista.
+1. Altere a variável `DR_WORLD_NAME` no arquivo `run4.env` para a nova pista.
 2. Atualize os arquivos customizados:
    ```bash
    dr-update && dr-update-env && dr-upload-custom-files
    ```
 3. Reinicie o treinamento com o comando:
    ```bash
-   dr-train
+   dr-start-training -w
    ```
 Isso permitirá que o modelo aproveite os aprendizados da pista anterior enquanto treina na nova pista.
 
